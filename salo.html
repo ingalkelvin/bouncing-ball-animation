@@ -1,0 +1,219 @@
+<!doctype  html>
+	<head>
+		<title>
+			Bouncing Ball
+		</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="style.css">
+	</head>
+
+	<body>
+		<center>
+			<canvas id="canvas" width="530" height="600"></canvas>
+			<br>
+			<textarea id="log"></textarea>
+			<br>
+			<input type = "button" value = "Play Again" onclick="playAgain()">
+
+		</center>
+
+		<script src="utils.js"></script>
+		<script src="ball.js"></script>
+		<script src="bar.js"></script>
+
+		<script type="text/javascript">
+
+		var tryAgain = false;
+
+		function playAgain() {
+
+			tryAgain = true;
+		}
+
+			window.onload = function() {
+
+				var canvas = document.getElementById("canvas");
+				var log = document.getElementById("log");
+				var context = canvas.getContext('2d');
+				var count=0;
+				var ball = new Ball;
+				var bar = new Bar("green");
+
+				var id=0;
+
+				var arrayFlag = [];
+				var bars;
+				var array = [];
+				var numArray = 20;
+
+				var DiffX=70;
+				var DiffY=20;
+
+				var vx = Math.random()*5-2;
+				var vy = Math.random()*15-13;
+
+
+				var left = 0;
+				var top = 0;
+				var right = canvas.width;
+				var bottom = canvas.height;
+
+				var vxBar = 0; 
+
+				ball.x = canvas.width/2;
+				ball.y = canvas.height/2;
+
+				bar.x = canvas.width/2;
+				bar.y = canvas.height - 20;
+
+				for(var i=0; i<numArray/5+1; i++) {
+					var row = 4;
+					while(row--) {
+
+						bars = new Bar("red");
+						bars.id = id++;
+						bars.x = DiffX;
+						bars.y = DiffY;
+						array.push(bars);
+
+						DiffX+=130;
+					}
+					DiffX=70;
+					DiffY+=20;
+
+				}
+
+				
+
+				function draw(bars) {
+
+					if (utils.intersects (ball.getBounds(), bars.getBounds())) {
+						
+						array.splice(bars.id, 1);
+						vy *= -1;
+					}
+
+				
+					bars.draw(context);
+				}
+
+				window.addEventListener('keydown',function(event){
+
+					switch(event.keyCode) {
+
+						case 37: 
+						
+							if(bar.x > 70) 
+								vxBar = -4;
+							else {
+								bar.x = 70;
+								vxBar = 0;
+								break;
+							}
+						break;
+						case 39:
+							if(bar.x < canvas.width-70) 
+								vxBar = 4;
+							else {
+								bar.x = canvas.width-70;
+								vxBar = 0;
+								break;
+							}
+						break;
+					}
+				},false);
+
+				window.addEventListener('keyup',function(){
+
+					vxBar = 0;
+				},false);
+
+				(function drawFrame() {
+
+					window.requestAnimationFrame(drawFrame, canvas);
+					context.clearRect(0,0,canvas.width, canvas.height);
+
+
+					bar.x += vxBar;
+					
+					ball.x += vx;
+					ball.y += vy;
+
+					
+					if(ball.x+ball.radius > right) {
+						
+						vx *= -1;
+					}
+					if(ball.x-ball.radius < left) {
+						
+						vx *= -1;
+						
+					}
+					if(ball.y-ball.radius < top) {
+						
+						vy *= -1;
+						
+					}
+
+
+					if (utils.intersects (ball.getBounds(), bar.getBounds())) {
+							
+							vy *= -1;
+
+					}	
+					
+				
+					
+					log.value = "Score: "+count;
+
+					ball.draw(context);
+					bar.draw(context);
+
+					array.forEach(draw);
+
+					if(tryAgain) {
+
+						bar.x = canvas.width/2;
+						bar.y = canvas.height - 20;
+
+						DiffX=70;
+						DiffY=20;
+
+						vx = Math.random()*10-5;
+						vy = Math.random()*10-5;
+						ball.y = canvas.height/2;
+						ball.x = canvas.width/2;
+						for(var i = 0; i<numArray; i++)
+						{
+							arrayFlag[i] = false;
+							
+						}
+						array.splice(0,numArray);
+						for(var i=0; i<numArray/5+1; i++) {
+							var row = 4;
+							while(row--) {
+								bars = new Bar("red");
+								bars.id = "bar: "+id++;
+								bars.x = DiffX;
+								bars.y = DiffY;
+								array.push(bars);
+
+								DiffX+=130;
+							}
+							DiffX=70;
+							DiffY+=20;
+						}
+						count=0;
+						tryAgain = false;
+					}
+
+				}());
+
+			};
+
+		</script>
+
+	</body>
+
+
+</html>
