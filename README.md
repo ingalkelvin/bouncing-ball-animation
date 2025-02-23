@@ -8,14 +8,7 @@ its a bricks ball game
 # Controls
 -	left/right arrow key
 
-# paypal
-
-paypal.me/kelvin.ynggal@gmail.com
-
-# BTC
-
-3LKLWWts1yTwPNYELkg1dokPpLkLnToDkF
 
 # website 
 
-https://testingkels.000webhostapp.com/
+https://kelvin-ingal-dev-ed.my.site.com/
